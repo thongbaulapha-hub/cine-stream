@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="th"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="DA LA MOVIE - ดูหนังและซีรีส์ที่ได้รับอนุญาตให้เผยแพร่">
+<title>DA LA MOVIE | ดูหนังออนไลน์</title><link rel="stylesheet" href="/style.css">
+</head><body>
+<header class="topbar">
+ <a class="brand" href="/"><span class="brand-mark">D</span> DA LA <b>MOVIE</b></a>
+ <nav><a href="#home">หน้าแรก</a><a href="#catalog">หนังทั้งหมด</a><a href="#catalog" data-category="หนังไทย">หนังไทย</a><a href="#catalog" data-category="หนังต่างประเทศ">ต่างประเทศ</a><a href="#catalog" data-category="ซีรีส์">ซีรีส์</a></nav>
+ <div class="top-actions"><input id="search" type="search" placeholder="ค้นหาหนัง..."><a class="admin-link" href="/admin.html">ผู้ดูแล</a></div>
+</header>
+<main>
+<section class="hero" id="home">
+ <div class="hero-content"><span class="eyebrow">CINEMA • ANYTIME • ANYWHERE</span>
+ <h1>เรื่องราวดี ๆ<br><em>เริ่มต้นที่นี่</em></h1>
+ <p>เลือกชมภาพยนตร์และซีรีส์ที่คัดสรรมาเพื่อคุณ รับชมได้ทุกที่ทุกเวลา</p>
+ <a class="primary-btn" href="#catalog">สำรวจคลังหนัง <span>→</span></a>
+ </div><div class="hero-orb"></div><div class="hero-note">DA LA MOVIE <small>YOUR CINEMA SPACE</small></div>
+</section>
+<section class="section" id="catalog">
+ <div class="section-head"><div><span class="eyebrow">EXPLORE COLLECTION</span><h2>คลังความบันเทิง</h2></div>
+ <div class="filters"><button class="filter active" data-filter="ทั้งหมด">ทั้งหมด</button><button class="filter" data-filter="หนังไทย">หนังไทย</button><button class="filter" data-filter="หนังต่างประเทศ">ต่างประเทศ</button><button class="filter" data-filter="ซีรีส์">ซีรีส์</button></div></div>
+ <div id="featured" class="featured-row"></div>
+ <div id="movies" class="movie-grid"><div class="empty">กำลังโหลดรายการหนัง...</div></div>
+</section>
+</main>
+<footer><a class="brand" href="#"><span class="brand-mark">D</span> DA LA <b>MOVIE</b></a><p>รับชมเฉพาะวิดีโอที่ได้รับอนุญาตให้เผยแพร่เท่านั้น</p><small>© <span id="year"></span> DA LA MOVIE</small></footer>
+<div class="modal" id="watchModal" aria-hidden="true"><div class="modal-card"><button class="close" id="closeModal" aria-label="ปิด">×</button><div class="player-wrap"><video id="player" controls playsinline></video></div><div class="modal-info"><span class="eyebrow" id="modalCategory"></span><h2 id="modalTitle"></h2><p id="modalDescription"></p></div></div></div>
+<script src="/app.js"></script>
+</body></html>
