@@ -27,4 +27,26 @@
 <footer><a class="brand" href="#"><span class="brand-mark">D</span> DA LA <b>MOVIE</b></a><p>รับชมเฉพาะวิดีโอที่ได้รับอนุญาตให้เผยแพร่เท่านั้น</p><small>© <span id="year"></span> DA LA MOVIE</small></footer>
 <div class="modal" id="watchModal" aria-hidden="true"><div class="modal-card"><button class="close" id="closeModal" aria-label="ปิด">×</button><div class="player-wrap"><video id="player" controls playsinline></video></div><div class="modal-info"><span class="eyebrow" id="modalCategory"></span><h2 id="modalTitle"></h2><p id="modalDescription"></p></div></div></div>
 <script src="/app.js"></script>
-</body></html>
+</body></html><script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBZQDcJEsWStllPjBsOJN3bciqZi3kHfzk",
+    authDomain: "doodee-1998.firebaseapp.com",
+    projectId: "doodee-1998",
+    storageBucket: "doodee-1998.firebasestorage.app",
+    messagingSenderId: "34391886889",
+    appId: "1:34391886889:web:fa6fec83cb435b150ae038",
+    measurementId: "G-WFQSNQ50LC"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
