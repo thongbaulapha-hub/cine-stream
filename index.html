@@ -1,52 +1,459 @@
-<!doctype html>
-<html lang="th"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="DA LA MOVIE - ดูหนังและซีรีส์ที่ได้รับอนุญาตให้เผยแพร่">
-<title>DA LA MOVIE | ดูหนังออนไลน์</title><link rel="stylesheet" href="/style.css">
-</head><body>
-<header class="topbar">
- <a class="brand" href="/"><span class="brand-mark">D</span> DA LA <b>MOVIE</b></a>
- <nav><a href="#home">หน้าแรก</a><a href="#catalog">หนังทั้งหมด</a><a href="#catalog" data-category="หนังไทย">หนังไทย</a><a href="#catalog" data-category="หนังต่างประเทศ">ต่างประเทศ</a><a href="#catalog" data-category="ซีรีส์">ซีรีส์</a></nav>
- <div class="top-actions"><input id="search" type="search" placeholder="ค้นหาหนัง..."><a class="admin-link" href="/admin.html">ผู้ดูแล</a></div>
-</header>
-<main>
-<section class="hero" id="home">
- <div class="hero-content"><span class="eyebrow">CINEMA • ANYTIME • ANYWHERE</span>
- <h1>เรื่องราวดี ๆ<br><em>เริ่มต้นที่นี่</em></h1>
- <p>เลือกชมภาพยนตร์และซีรีส์ที่คัดสรรมาเพื่อคุณ รับชมได้ทุกที่ทุกเวลา</p>
- <a class="primary-btn" href="#catalog">สำรวจคลังหนัง <span>→</span></a>
- </div><div class="hero-orb"></div><div class="hero-note">DA LA MOVIE <small>YOUR CINEMA SPACE</small></div>
-</section>
-<section class="section" id="catalog">
- <div class="section-head"><div><span class="eyebrow">EXPLORE COLLECTION</span><h2>คลังความบันเทิง</h2></div>
- <div class="filters"><button class="filter active" data-filter="ทั้งหมด">ทั้งหมด</button><button class="filter" data-filter="หนังไทย">หนังไทย</button><button class="filter" data-filter="หนังต่างประเทศ">ต่างประเทศ</button><button class="filter" data-filter="ซีรีส์">ซีรีส์</button></div></div>
- <div id="featured" class="featured-row"></div>
- <div id="movies" class="movie-grid"><div class="empty">กำลังโหลดรายการหนัง...</div></div>
-</section>
-</main>
-<footer><a class="brand" href="#"><span class="brand-mark">D</span> DA LA <b>MOVIE</b></a><p>รับชมเฉพาะวิดีโอที่ได้รับอนุญาตให้เผยแพร่เท่านั้น</p><small>© <span id="year"></span> DA LA MOVIE</small></footer>
-<div class="modal" id="watchModal" aria-hidden="true"><div class="modal-card"><button class="close" id="closeModal" aria-label="ปิด">×</button><div class="player-wrap"><video id="player" controls playsinline></video></div><div class="modal-info"><span class="eyebrow" id="modalCategory"></span><h2 id="modalTitle"></h2><p id="modalDescription"></p></div></div></div>
-<script src="/app.js"></script>
-</body></html><script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MY STREAMING - เว็บดูหนังออนไลน์</title>
+  <style>
+    :root {
+      --bg-main: #0f1014;
+      --bg-card: #191b22;
+      --bg-modal: #1f222c;
+      --primary: #e50914;
+      --primary-hover: #f40612;
+      --text-main: #ffffff;
+      --text-muted: #9ca3af;
+      --border: #2e323f;
+    }
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBZQDcJEsWStllPjBsOJN3bciqZi3kHfzk",
-    authDomain: "doodee-1998.firebaseapp.com",
-    projectId: "doodee-1998",
-    storageBucket: "doodee-1998.firebasestorage.app",
-    messagingSenderId: "34391886889",
-    appId: "1:34391886889:web:fa6fec83cb435b150ae038",
-    measurementId: "G-WFQSNQ50LC"
-  };
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.5; }
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+    /* Navbar */
+    header {
+      background: rgba(15, 16, 20, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    button:hover { background: var(--primary-hover); }
+    button.secondary { background: #2b2f3c; }
+    button.secondary:hover { background: #3a3f50; }
+    button.danger { background: #b91c1c; }
+
+    /* Search & Filter */
+    .controls {
+      max-width: 1200px;
+      margin: 20px auto 10px;
+      padding: 0 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    input, select, textarea {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: white;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    .search-input { flex: 1; min-width: 200px; }
+
+    /* Movie Grid */
+    .container { max-width: 1200px; margin: 0 auto; padding: 15px 20px 50px; }
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 18px;
+    }
+    .movie-card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .movie-card:hover { transform: translateY(-4px); border-color: var(--primary); }
+    .poster-wrap { position: relative; aspect-ratio: 2/3; background: #111; }
+    .poster-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(229, 9, 20, 0.9);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .movie-info { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .movie-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .movie-desc { font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 200;
+      padding: 20px;
+      overflow-y: auto;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-box {
+      background: var(--bg-modal);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      position: relative;
+      margin: auto;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .close-btn { background: none; font-size: 1.5rem; padding: 0 8px; color: var(--text-muted); }
+
+    /* Video Player */
+    .video-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+    .video-container iframe, .video-container video { width: 100%; height: 100%; border: none; }
+
+    /* Admin Panel */
+    .admin-section { display: none; }
+    .admin-section.active { display: block; }
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 4px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; }
+    .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+    .admin-table th, .admin-table td { border-bottom: 1px solid var(--border); padding: 10px 8px; text-align: left; }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- แถบเมนูด้านบน -->
+  <header>
+    <div class="logo" onclick="showPublicView()">🎬 MY STREAM</div>
+    <div class="nav-actions">
+      <button class="secondary" onclick="showPublicView()">หน้าแรก</button>
+      <button onclick="openAdmin()">⚙️ หลังบ้านแอดมิน</button>
+    </div>
+  </header>
+
+  <!-- ส่วนหน้าบ้านสำหรับผู้ชม -->
+  <main id="publicView">
+    <div class="controls">
+      <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาชื่อเรื่อง..." oninput="renderMovies()">
+      <select id="categoryFilter" onchange="renderMovies()">
+        <option value="ALL">ทุกหมวดหมู่</option>
+        <option value="แอ็กชัน">แอ็กชัน</option>
+        <option value="ดราม่า">ดราม่า</option>
+        <option value="ตลก">ตลก</option>
+        <option value="สยองขวัญ">สยองขวัญ</option>
+        <option value="อนิเมะ">อนิเมะ</option>
+      </select>
+    </div>
+
+    <div class="container">
+      <div id="movieGrid" class="movie-grid"></div>
+    </div>
+  </main>
+
+  <!-- ส่วนหลังบ้านแอดมิน -->
+  <section id="adminView" class="container admin-section">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2>🛠️ ระบบจัดการหนัง (แอดมิน)</h2>
+      <button class="secondary" onclick="logoutAdmin()">ออกจากระบบแอดมิน</button>
+    </div>
+
+    <!-- ฟอร์มเพิ่มหนัง -->
+    <div style="background: var(--bg-card); padding: 18px; border-radius: 10px; border: 1px solid var(--border);">
+      <h3 style="margin-bottom: 12px;">+ เพิ่มหนังเรื่องใหม่</h3>
+      <form id="addMovieForm" onsubmit="addMovie(event)">
+        <div class="form-group">
+          <label>ชื่อเรื่อง *</label>
+          <input type="text" id="mTitle" required placeholder="เช่น ตัวอย่างภาพยนตร์ 2026">
+        </div>
+        <div class="form-group">
+          <label>หมวดหมู่</label>
+          <select id="mCategory">
+            <option value="แอ็กชัน">แอ็กชัน</option>
+            <option value="ดราม่า">ดราม่า</option>
+            <option value="ตลก">ตลก</option>
+            <option value="สยองขวัญ">สยองขวัญ</option>
+            <option value="อนิเมะ">อนิเมะ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ลิงก์รูปโปสเตอร์ (URL รูปภาพ) *</label>
+          <input type="url" id="mPoster" required placeholder="https://example.com/poster.jpg">
+        </div>
+        <div class="form-group">
+          <label>ลิงก์วิดีโอ (รองรับไฟล์ .mp4 หรือลิงก์ YouTube / Google Drive Preview) *</label>
+          <input type="url" id="mVideo" required placeholder="https://www.youtube.com/watch?v=... หรือ https://.../video.mp4">
+        </div>
+        <div class="form-group">
+          <label>เรื่องย่อ</label>
+          <textarea id="mDesc" rows="3" placeholder="กรอกรายละเอียดหรือเรื่องย่อ..."></textarea>
+        </div>
+        <button type="submit">บันทึกและเผยแพร่</button>
+      </form>
+    </div>
+
+    <!-- รายการหนังในระบบ -->
+    <h3 style="margin-top: 25px;">รายการหนังทั้งหมดในระบบ</h3>
+    <div style="overflow-x: auto;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ชื่อเรื่อง</th>
+            <th>หมวดหมู่</th>
+            <th>จัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="adminMovieList"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- หน้าต่างเล่นวิดีโอ (Video Player Modal) -->
+  <div id="playerModal" class="modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="playerTitle">ชื่อเรื่อง</h3>
+        <button class="close-btn" onclick="closePlayer()">✕</button>
+      </div>
+      <div id="videoContainer" class="video-container"></div>
+      <p id="playerCategory" style="color: var(--primary); font-weight: 700; font-size: 0.85rem; margin-bottom: 6px;"></p>
+      <p id="playerDesc" style="color: var(--text-muted); font-size: 0.95rem;"></p>
+    </div>
+  </div>
+
+  <!-- หน้าต่างล็อกอินแอดมิน -->
+  <div id="loginModal" class="modal">
+    <div class="modal-box" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3>เข้าสู่ระบบแอดมิน</h3>
+        <button class="close-btn" onclick="closeLogin()">✕</button>
+      </div>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>รหัสผ่านแอดมิน</label>
+          <input type="password" id="adminPassInput" required placeholder="กรอกรหัสผ่าน (ค่าเริ่มต้น: 1234)">
+        </div>
+        <button type="submit" style="width:100%;">เข้าสู่ระบบ</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ตั้งค่ารหัสผ่านแอดมินตรงนี้ (แนะนำให้เปลี่ยนก่อนนำไปใช้จริง)
+    const ADMIN_PASSWORD = "1234";
+    const STORAGE_KEY = "my_streaming_movies_v1";
+
+    // ข้อมูลตัวอย่างเริ่มต้น
+    const defaultMovies = [
+      {
+        id: 1,
+        title: "Big Buck Bunny (วิดีโอทดสอบระบบ)",
+        category: "อนิเมะ",
+        poster: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Big_buck_bunny_poster_big.jpg",
+        video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        desc: "ตัวอย่างไฟล์วิดีโอความคมชัดสูงสำหรับทดสอบระบบเล่นวิดีโอบนหน้าเว็บไซต์"
+      }
+    ];
+
+    // โหลดข้อมูลหนังจาก LocalStorage (สามารถเปลี่ยนไปเชื่อมต่อ Firebase / Supabase ได้)
+    function getMovies() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultMovies));
+        return defaultMovies;
+      }
+      return JSON.parse(saved);
+    }
+
+    function saveMovies(movies) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(movies));
+    }
+
+    // แสดงรายการหนังหน้าบ้าน
+    function renderMovies() {
+      const movies = getMovies();
+      const keyword = document.getElementById("searchInput").value.toLowerCase();
+      const category = document.getElementById("categoryFilter").value;
+      const grid = document.getElementById("movieGrid");
+
+      const filtered = movies.filter(m => {
+        const matchTitle = m.title.toLowerCase().includes(keyword);
+        const matchCat = category === "ALL" || m.category === category;
+        return matchTitle && matchCat;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column: 1/-1;">ไม่พบรายการหนังที่ค้นหา</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(m => `
+        <div class="movie-card" onclick="playMovie(${m.id})">
+          <div class="poster-wrap">
+            <span class="badge">${m.category}</span>
+            <img src="${m.poster}" alt="${m.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+          </div>
+          <div class="movie-info">
+            <div class="movie-title">${m.title}</div>
+            <div class="movie-desc">${m.desc || "ไม่มีเรื่องย่อ"}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // แปลงลิงก์วิดีโอให้เล่นได้อัตโนมัติ (รองรับทั้ง .mp4 และ YouTube)
+    function buildVideoEmbed(url) {
+      if (url.includes("youtube.com/watch?v=")) {
+        const videoId = url.split("v=")[1].split("&")[0];
+        return `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allowfullscreen></iframe>`;
+      }
+      if (url.includes("youtu.be/")) {
+        const videoId = url.split("youtu.be/")[1].split("?")[0];
+        return `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allowfullscreen></iframe>`;
+      }
+      if (url.endsWith(".mp4") || url.endsWith(".webm")) {
+        return `<video src="${url}" controls autoplay playsinline></video>`;
+      }
+      // กรณีเป็นลิงก์ Embed อื่นๆ เช่น Google Drive (/preview)
+      return `<iframe src="${url}" allowfullscreen></iframe>`;
+    }
+
+    // เปิดเล่นวิดีโอ
+    function playMovie(id) {
+      const movie = getMovies().find(m => m.id === id);
+      if (!movie) return;
+
+      document.getElementById("playerTitle").innerText = movie.title;
+      document.getElementById("playerCategory").innerText = "หมวดหมู่: " + movie.category;
+      document.getElementById("playerDesc").innerText = movie.desc || "";
+      document.getElementById("videoContainer").innerHTML = buildVideoEmbed(movie.video);
+      document.getElementById("playerModal").classList.add("active");
+    }
+
+    function closePlayer() {
+      document.getElementById("videoContainer").innerHTML = "";
+      document.getElementById("playerModal").classList.remove("active");
+    }
+
+    // ระบบล็อกอินและหน้าแอดมิน
+    function openAdmin() {
+      if (sessionStorage.getItem("isAdmin") === "true") {
+        showAdminView();
+      } else {
+        document.getElementById("loginModal").classList.add("active");
+      }
+    }
+
+    function closeLogin() {
+      document.getElementById("loginModal").classList.remove("active");
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const pass = document.getElementById("adminPassInput").value;
+      if (pass === ADMIN_PASSWORD) {
+        sessionStorage.setItem("isAdmin", "true");
+        document.getElementById("adminPassInput").value = "";
+        closeLogin();
+        showAdminView();
+      } else {
+        alert("รหัสผ่านไม่ถูกต้อง!");
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem("isAdmin");
+      showPublicView();
+    }
+
+    function showAdminView() {
+      document.getElementById("publicView").style.display = "none";
+      document.getElementById("adminView").classList.add("active");
+      renderAdminList();
+    }
+
+    function showPublicView() {
+      document.getElementById("adminView").classList.remove("active");
+      document.getElementById("publicView").style.display = "block";
+      renderMovies();
+    }
+
+    // เพิ่มและลบหนังในระบบแอดมิน
+    function addMovie(e) {
+      e.preventDefault();
+      const movies = getMovies();
+      const newMovie = {
+        id: Date.now(),
+        title: document.getElementById("mTitle").value.trim(),
+        category: document.getElementById("mCategory").value,
+        poster: document.getElementById("mPoster").value.trim(),
+        video: document.getElementById("mVideo").value.trim(),
+        desc: document.getElementById("mDesc").value.trim()
+      };
+
+      movies.unshift(newMovie);
+      saveMovies(movies);
+      document.getElementById("addMovieForm").reset();
+      renderAdminList();
+      alert("เพิ่มหนังเรียบร้อยแล้ว!");
+    }
+
+    function deleteMovie(id) {
+      if (!confirm("ต้องการลบเรื่องนี้ออกจากระบบใช่หรือไม่?")) return;
+      const updated = getMovies().filter(m => m.id !== id);
+      saveMovies(updated);
+      renderAdminList();
+    }
+
+    function renderAdminList() {
+      const movies = getMovies();
+      const tbody = document.getElementById("adminMovieList");
+      tbody.innerHTML = movies.map(m => `
+        <tr>
+          <td>${m.title}</td>
+          <td>${m.category}</td>
+          <td><button class="danger" onclick="deleteMovie(${m.id})">ลบ</button></td>
+        </tr>
+      `).join("");
+    }
+
+    // เริ่มต้นทำงาน
+    renderMovies();
+  </script>
+</body>
+</html>
